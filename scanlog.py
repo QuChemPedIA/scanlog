@@ -21,7 +21,7 @@ import sklearn.preprocessing
 CstBohr2Ang = 0.52917721092
 CstHartree2eV = 27.21138505
 CstHartree2cm1 = 219474.6313708
-scanlog_version = "1.0.0"
+scanlog_version = "1.0.1"
 
 """ Scanlog Exception class.
 """
@@ -552,7 +552,7 @@ def process_logfile_list(logfilelist, log_storage_path="", verbose=False, sparse
                                log_storage_path=log_storage_path,
                                verbose=verbose, sparse=sparse)
         json_list += j
-        logfile += l
+        log_files += l
         
     return (log_files, json_list)
 
