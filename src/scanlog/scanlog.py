@@ -1,8 +1,3 @@
-#!/usr/bin/python3 -W ignore
-#-*- coding: utf-8 -*-
-
-from __future__ import print_function
-
 import os
 import sys
 import json
@@ -10,10 +5,10 @@ import pickle
 import hashlib
 import traceback
 
-import cclib # custom github BenoitDamota/cclib (clone+pythonpath)
-import openbabel.pybel as pybel # included in openbabel (pip install open babel)
+import cclib
+import openbabel.pybel as pybel
 import numpy as np
-import openbabel as ob # (apt + pip)
+import openbabel as ob
 import scipy.sparse as sp
 import sklearn.preprocessing
 
@@ -21,7 +16,7 @@ import sklearn.preprocessing
 CstBohr2Ang = 0.52917721092
 CstHartree2eV = 27.21138505
 CstHartree2cm1 = 219474.6313708
-scanlog_version = "1.0.1"
+scanlog_version = "1.0.2"
 
 """ Scanlog Exception class.
 """
@@ -171,7 +166,6 @@ def wavefunction_results_subsection(res_json, data_json, data, obdata, sparse=Tr
         _try_key_insertion(section, "MO_sym", [mosym[:b_cut] for mosym in section["MO_sym"]])
 
         # compress and prune mocoeffs
-        #if (res_json["comp_details"]["general"]["package"] == "NWChem"):
         mo_coefs = []
         # take last mocoeffs  (-2 with alpha/beta or -1)
         nb_coef = -2 if len(data.moenergies) == 2 else -1
@@ -199,7 +193,6 @@ def wavefunction_results_subsection(res_json, data_json, data, obdata, sparse=Tr
         section["MO_coefs"] = mo_coefs
     except Exception as e:
         # partial MO data (qc lvl2 takes the decision)
-        #raise(e)
         pass
     _try_key_insertion(section, "total_molecular_energy", data_json, ['properties', 'energy', 'total'])
     # eV to Hartree conversion
@@ -352,7 +345,6 @@ def metadata_section(logfile, res_json, data_json, data, obdata):
     section = res_json["metadata"]
     res_json["metadata"]["parser_version"] = scanlog_version
     res_json["metadata"]["log_file"] = os.path.basename(logfile)
-    #res_json["metadata"]["publication_DOI"] = 'N/A'
 
 def full_report(logfile, data_json, data, obdata, verbose=False, sparse=True):
     res_json = {}
@@ -407,7 +399,7 @@ def job_type_guess(res_json):
             job_type.append('TD')
         if len(job_type) == 0:
             job_type.append('SP')
-    # # un SP peut avoir des MO
+    # a SP can have MO
     res_json["metadata"]["discretizable"] = "False"
     if "MO_coefs" in res_json["results"]["wavefunction"].keys():
             res_json["metadata"]["discretizable"] = "True"
@@ -565,4 +557,4 @@ if __name__ == "__main__" :
         print(">>> Processed successfully %d steps (over %d detected)." % (len(json_list),
                                                                            len(log_files)))
         print(json.dumps(json_list))
-    #print(json_list)
+
